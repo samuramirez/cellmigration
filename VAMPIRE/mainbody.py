@@ -22,6 +22,7 @@ def mainbody(build_model, csv, entries, outpth=None, clnum=None, progress_bar=No
         vampire_model = {
             "N": [],
             "bdrn": [],
+            "bdpc2": [],
             "mdd": [],
             "pc": [],
             "clnum": [],

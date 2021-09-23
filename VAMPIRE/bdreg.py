@@ -57,4 +57,7 @@ def bdreg(B, N=None, VamModel=None, BuildModel=None):
     end = time.time()
     print('For parallel of bdreg, elapsed time is ' + str(end - start) + 'seconds...')
 
+    bdpc2cp = deepcopy(bdpc2)
+    VamModel['bdpc2'] = bdpc2cp
+
     return bdpc2, VamModel
