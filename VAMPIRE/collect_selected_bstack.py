@@ -5,16 +5,17 @@ import pandas as pd
 from tkinter import END
 
 
-def collect_seleced_bstack(csv, buildmodel, entries):
+def collect_seleced_bstack(csv, outpth, buildmodel, entries):
 	print('## collect_selected_bstack.py')
 	if buildmodel:
 		ui = pd.read_csv(csv)
 		setpaths = ui['set location']
 		tag = ui['tag']
+		condition = ui['condition']
 		bstacks = []
 		for setidx, setpath in enumerate(setpaths):
-			pickles = [_ for _ in os.listdir(setpath) if _.lower().endswith('pickle')]
-			bstack = [pd.read_pickle(os.path.join(setpath, pkl)) for pkl in pickles if tag[setidx] in pkl]
+			pickles = [_ for _ in os.listdir(outpth) if _.lower().endswith('pickle')]
+			bstack = [pd.read_pickle(os.path.join(outpth, pkl)) for pkl in pickles if condition[setidx] in pkl]
 			bstacks = bstacks + bstack
 		try:
 			df = pd.concat(bstacks, ignore_index=True)

@@ -24,6 +24,7 @@ def pca_bdreg(bdpc, VamModel, BuildModel):
         # latent is not used later
         pc, score, latent = PCA_custom(test)
         VamModel['pc'] = pc
+        VamModel['eigenvalues'] = latent
     else:
         pc = VamModel['pc']
         score = np.dot(test, pc)

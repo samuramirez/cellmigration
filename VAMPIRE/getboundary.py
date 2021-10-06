@@ -43,18 +43,19 @@ def mask2boundary(mask):
     return boundary
 
 
-def getboundary(csv, progress_bar, entries):
+def getboundary(csv, outpth, progress_bar, entries):
     print('## getboundary.py')
     ui = pd.read_csv(csv)
     setpaths = ui['set location']
     # iterate through image set
     for setfolderidx, setfolder in enumerate(setpaths):
         tag = ui['tag'][setfolderidx]
+        condition = ui['condition'][setfolderidx]
         registry = []
-        datasheet = 'VAMPIRE datasheet ' + tag + '.csv'
-        registry_dst = os.path.join(setfolder, datasheet)
+        datasheet = 'VAMPIRE datasheet ' + condition + '.csv'
+        registry_dst = os.path.join(outpth, datasheet)
         boundarymaster = []
-        boundarydst = os.path.join(setfolder, tag + '_boundary_coordinate_stack.pickle')
+        boundarydst = os.path.join(outpth, condition + '_boundary_coordinate_stack.pickle')
         if os.path.exists(registry_dst):
             print('registry or boundary already exist')
             continue
@@ -109,7 +110,7 @@ def getboundary(csv, progress_bar, entries):
             df_registry.columns = ['Filename', 'ImageID', 'ObjectID', 'X', 'Y', 'Area', 'Perimeter',
                                    'Major Axis', 'Minor Axis', 'Circularity', 'Aspect Ratio']
             df_registry.index = df_registry.index + 1
-            df_registry.to_csv(os.path.join(setfolder, datasheet), index=False)
+            df_registry.to_csv(os.path.join(outpth, datasheet), index=False)
     entries['Status'].delete(0, END)
     entries['Status'].insert(0, 'object csv created...')
     return

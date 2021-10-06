@@ -1,5 +1,6 @@
 # built-in libraries
 import pickle
+import ntpath
 from datetime import datetime
 # external libraries
 # my wrapper
@@ -18,12 +19,13 @@ def mainbody(build_model, csv, entries, outpth=None, clnum=None, progress_bar=No
     realtimedate = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     N = int(entries['Number of coordinates'].get())
     if build_model:
-        bstack= collect_seleced_bstack(csv, build_model, entries)
+        bstack= collect_seleced_bstack(csv, outpth, build_model, entries)
         vampire_model = {
             "N": [],
             "bdrn": [],
             "bdpc2": [],
             "mdd": [],
+            "eigenvalues": [],
             "pc": [],
             "clnum": [],
             "pcnum": [],
@@ -59,8 +61,8 @@ def mainbody(build_model, csv, entries, outpth=None, clnum=None, progress_bar=No
         condition = UI['condition']
         setID = UI['set ID'].astype('str')
         for setidx, setpath in enumerate(setpaths):
-            pickles = [_ for _ in os.listdir(setpath) if _.lower().endswith('pickle')]
-            bdstack = [pd.read_pickle(os.path.join(setpath, pkl)) for pkl in pickles if tag[setidx] in pkl]
+            pickles = [_ for _ in os.listdir(ntpath.dirname(outpth)) if _.lower().endswith('pickle')]
+            bdstack = [pd.read_pickle(os.path.join(ntpath.dirname(outpth), pkl)) for pkl in pickles if condition[setidx] in pkl]
             bdstacks = pd.concat(bdstack, ignore_index=True)
             progress_bar["value"] = 10
             progress_bar.update()
@@ -80,12 +82,12 @@ def mainbody(build_model, csv, entries, outpth=None, clnum=None, progress_bar=No
                 IDX, IDX_dist, vampire_model, goodness = clusterSM(outpth, score, bdpc, clnum, pcnum, vampire_model,
                                                                    build_model, condition[setidx], setID[setidx],
                                                                    entries)
-                update_csv(IDX, IDX_dist, tag[setidx], setpath, goodness=goodness)
+                update_csv(IDX, IDX_dist, tag[setidx], condition[setidx], setpath, ntpath.dirname(outpth), goodness=goodness)
             else:
                 IDX, IDX_dist, vampire_model, _ = clusterSM(outpth, score, bdpc, clnum, pcnum, vampire_model,
                                                                    build_model, condition[setidx], setID[setidx],
                                                                    entries)
-                update_csv(IDX, IDX_dist, tag[setidx], setpath)
+                update_csv(IDX, IDX_dist, tag[setidx], condition[setidx], setpath, ntpath.dirname(outpth))
             progress_bar["value"] = progress + 100 * (setidx + 1) / len(setpaths)
             progress_bar.update()
         entries['Status'].delete(0, END)
