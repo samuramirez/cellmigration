@@ -45,6 +45,9 @@ def mask2boundary(mask):
 
 def getboundary(csv, outpth, progress_bar, entries):
     print('## getboundary.py')
+    model_name = entries['Model name'].get()
+    outpth = outpth + '/' + model_name
+    os.mkdir(outpth) 
     ui = pd.read_csv(csv)
     setpaths = ui['set location']
     # iterate through image set

@@ -8,6 +8,8 @@ from tkinter import END
 def collect_seleced_bstack(csv, outpth, buildmodel, entries):
 	print('## collect_selected_bstack.py')
 	if buildmodel:
+		model_name = entries['Model name'].get()
+		outpth = outpth + '/' + model_name
 		ui = pd.read_csv(csv)
 		setpaths = ui['set location']
 		tag = ui['tag']

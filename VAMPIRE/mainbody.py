@@ -61,8 +61,8 @@ def mainbody(build_model, csv, entries, outpth=None, clnum=None, progress_bar=No
         condition = UI['condition']
         setID = UI['set ID'].astype('str')
         for setidx, setpath in enumerate(setpaths):
-            pickles = [_ for _ in os.listdir(ntpath.dirname(outpth)) if _.lower().endswith('pickle')]
-            bdstack = [pd.read_pickle(os.path.join(ntpath.dirname(outpth), pkl)) for pkl in pickles if condition[setidx] in pkl]
+            pickles = [_ for _ in os.listdir(outpth) if _.lower().endswith('pickle')]
+            bdstack = [pd.read_pickle(os.path.join(outpth, pkl)) for pkl in pickles if condition[setidx] in pkl]
             bdstacks = pd.concat(bdstack, ignore_index=True)
             progress_bar["value"] = 10
             progress_bar.update()
@@ -82,12 +82,12 @@ def mainbody(build_model, csv, entries, outpth=None, clnum=None, progress_bar=No
                 IDX, IDX_dist, vampire_model, goodness = clusterSM(outpth, score, bdpc, clnum, pcnum, vampire_model,
                                                                    build_model, condition[setidx], setID[setidx],
                                                                    entries)
-                update_csv(IDX, IDX_dist, tag[setidx], condition[setidx], setpath, ntpath.dirname(outpth), goodness=goodness)
+                update_csv(IDX, IDX_dist, tag[setidx], condition[setidx], setpath, outpth, goodness=goodness)
             else:
                 IDX, IDX_dist, vampire_model, _ = clusterSM(outpth, score, bdpc, clnum, pcnum, vampire_model,
                                                                    build_model, condition[setidx], setID[setidx],
                                                                    entries)
-                update_csv(IDX, IDX_dist, tag[setidx], condition[setidx], setpath, ntpath.dirname(outpth))
+                update_csv(IDX, IDX_dist, tag[setidx], condition[setidx], setpath, outpth)
             progress_bar["value"] = progress + 100 * (setidx + 1) / len(setpaths)
             progress_bar.update()
         entries['Status'].delete(0, END)
