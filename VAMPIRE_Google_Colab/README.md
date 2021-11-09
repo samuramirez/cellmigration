@@ -1,0 +1,1 @@
+Code adapted from https://github.com/kukionfr/VAMPIRE_open to run in Google Colab. To use this, upload a copy of SourceCode to your Google Drive in a folder called SourceCode and open VAMPIRE_on_colab.ipynb in Google Colab.
